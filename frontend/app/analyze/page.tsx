@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
-import { CheckCircle, Loader2, AlertCircle, Download, ArrowLeft, FileText, Shield, Search, Calculator } from 'lucide-react';
+import { CheckCircle, Loader2, AlertCircle, Download, ArrowLeft, FileText, Shield, Search, Calculator, ChevronDown, ChevronRight } from 'lucide-react';
 
 interface StepResult {
     step: string;
@@ -87,64 +87,69 @@ export default function AnalyzePage() {
       <!DOCTYPE html>
       <html>
       <head>
-        <title>TrueOrigins Analysis Report</title>
+        <title>TrueOrigins Verification Report</title>
         <style>
-          body { font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
-          h1 { color: #7c3aed; border-bottom: 2px solid #7c3aed; padding-bottom: 10px; }
-          h2 { color: #334155; margin-top: 30px; }
-          .score-box { background: #f1f5f9; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0; }
-          .score { font-size: 48px; font-weight: bold; color: ${finalReport?.synthetic_probability > 70 ? '#ef4444' : finalReport?.synthetic_probability > 40 ? '#f59e0b' : '#22c55e'}; }
-          .label { color: #64748b; font-size: 14px; }
-          .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0; }
-          .card { background: #f8fafc; padding: 16px; border-radius: 8px; text-align: center; }
-          .card-value { font-size: 24px; font-weight: bold; color: #1e293b; }
-          .card-label { font-size: 12px; color: #64748b; margin-top: 4px; }
-          pre { background: #f1f5f9; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 11px; }
-          .section { margin: 24px 0; padding: 16px; border: 1px solid #e2e8f0; border-radius: 8px; }
-          .footer { margin-top: 40px; text-align: center; color: #94a3b8; font-size: 12px; }
+          body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 60px; max-width: 800px; margin: 0 auto; color: #1a202c; }
+          .header { border-bottom: 2px solid #1a202c; padding-bottom: 20px; margin-bottom: 40px; }
+          h1 { font-size: 24px; font-weight: 700; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+          .meta { font-size: 14px; color: #718096; margin-top: 10px; }
+          
+          .score-section { background: #f7fafc; padding: 30px; border-radius: 4px; text-align: center; margin-bottom: 40px; border: 1px solid #e2e8f0; }
+          .score-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #718096; }
+          .score-value { font-size: 64px; font-weight: 800; margin: 10px 0; color: #1a202c; }
+          .confidence { font-weight: 600; padding: 4px 12px; border-radius: 99px; display: inline-block; font-size: 12px; }
+          
+          .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
+          .metric { padding: 20px; border: 1px solid #e2e8f0; border-radius: 4px; text-align: center; }
+          .metric-val { font-size: 24px; font-weight: 700; color: #1a202c; }
+          .metric-label { font-size: 11px; text-transform: uppercase; color: #718096; margin-top: 5px; }
+          
+          .section-title { font-size: 16px; font-weight: 700; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px; margin-top: 40px; }
+          
+          .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+          .data-table th, .data-table td { text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; }
+          .data-table th { color: #718096; font-weight: 600; width: 40%; }
+          .data-table td { color: #1a202c; font-weight: 500; }
+          
+          .footer { margin-top: 60px; font-size: 11px; color: #a0aec0; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px; }
         </style>
       </head>
       <body>
-        <h1>TrueOrigins Analysis Report</h1>
-        <p><strong>File:</strong> ${filename}</p>
-        <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+        <div class="header">
+          <h1>Verification Report</h1>
+          <div class="meta">
+            File: ${filename} <br/>
+            Date: ${new Date().toLocaleString()} <br/>
+            ID: ${Math.random().toString(36).substr(2, 9).toUpperCase()}
+          </div>
+        </div>
         
-        <div class="score-box">
-          <div class="score">${finalReport?.synthetic_probability}%</div>
-          <div class="label">Synthetic Probability</div>
-          <div style="margin-top: 8px; color: ${finalReport?.confidence_level === 'High' ? '#22c55e' : finalReport?.confidence_level === 'Medium' ? '#f59e0b' : '#ef4444'}">
-            ${finalReport?.confidence_level} Confidence
+        <div class="score-section">
+          <div class="score-label">Synthetic Probability Score</div>
+          <div class="score-value">${finalReport?.synthetic_probability}%</div>
+          <div class="confidence" style="background: ${finalReport?.confidence_level === 'High' ? '#def7ec' : '#fefcbf'}; color: ${finalReport?.confidence_level === 'High' ? '#03543f' : '#744210'}">
+            ${finalReport?.confidence_level.toUpperCase()} CONFIDENCE
           </div>
         </div>
 
-        <h2>Score Breakdown</h2>
         <div class="grid">
-          <div class="card">
-            <div class="card-value">${finalReport?.breakdown?.filename_score || 0}</div>
-            <div class="card-label">Filename Score</div>
+          <div class="metric">
+            <div class="metric-val">${finalReport?.breakdown?.filename_score || 0}</div>
+            <div class="metric-label">Filename Risk</div>
           </div>
-          <div class="card">
-            <div class="card-value">${finalReport?.breakdown?.metadata_score || 0}</div>
-            <div class="card-label">Metadata Score</div>
+          <div class="metric">
+            <div class="metric-val">${finalReport?.breakdown?.metadata_score || 0}</div>
+            <div class="metric-label">Metadata Risk</div>
           </div>
-          <div class="card">
-            <div class="card-value">${finalReport?.breakdown?.c2pa_score || 0}</div>
-            <div class="card-label">C2PA Score</div>
+          <div class="metric">
+            <div class="metric-val">${finalReport?.breakdown?.c2pa_score || 0}</div>
+            <div class="metric-label">Provenance Risk</div>
           </div>
         </div>
-
-        <h2>Analysis Steps</h2>
-        ${steps.map(s => `
-          <div class="section">
-            <h3>${s.step.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</h3>
-            <p>Status: ${s.status}</p>
-            ${s.data ? `<pre>${JSON.stringify(s.data, null, 2)}</pre>` : ''}
-          </div>
-        `).join('')}
 
         <div class="footer">
-          <p>Generated by TrueOrigins - Synthetic Media Verification</p>
-          <p>Based on C2PA Standards</p>
+          Generated by TrueOrigins Verification Engine. <br/>
+          This report is for informational purposes only.
         </div>
       </body>
       </html>
@@ -183,13 +188,13 @@ export default function AnalyzePage() {
 
     if (!filepath || !filename) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+            <div className="min-h-screen bg-white flex items-center justify-center">
                 <div className="text-center">
-                    <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-                    <h1 className="text-2xl font-bold text-white mb-2">No File Selected</h1>
-                    <p className="text-gray-400 mb-6">Please upload a file from the home page first.</p>
-                    <a href="/" className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
-                        <ArrowLeft className="w-4 h-4" /> Back to Home
+                    <AlertCircle className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+                    <h1 className="text-xl font-bold text-slate-900 mb-2">No Asset Selected</h1>
+                    <p className="text-slate-500 mb-6">Please upload a file from the dashboard.</p>
+                    <a href="/" className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-md transition">
+                        <ArrowLeft className="w-4 h-4" /> Return to Dashboard
                     </a>
                 </div>
             </div>
@@ -197,100 +202,168 @@ export default function AnalyzePage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div className="min-h-screen bg-white text-slate-900 font-sans">
             {/* Header */}
-            <div className="border-b border-white/10 bg-black/30 backdrop-blur-md">
-                <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-                    <a href="/" className="flex items-center gap-2 text-gray-400 hover:text-white transition">
-                        <ArrowLeft className="w-4 h-4" /> Back
+            <div className="border-b border-slate-200 bg-white sticky top-0 z-50">
+                <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+                    <a href="/" className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition font-medium text-sm">
+                        <ArrowLeft className="w-4 h-4" /> Back to Dashboard
                     </a>
-                    <h1 className="text-xl font-bold text-white">Analysis in Progress</h1>
+                    <div className="flex items-center gap-2">
+                        <Shield className="w-5 h-5 text-slate-900" />
+                        <span className="font-bold text-slate-900">TrueOrigins Analysis</span>
+                    </div>
                     {finalReport && (
                         <button
                             onClick={downloadPDF}
-                            className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm transition"
+                            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-md text-sm font-medium transition shadow-sm"
                         >
-                            <Download className="w-4 h-4" /> Download PDF
+                            <Download className="w-4 h-4" /> Export Report
                         </button>
                     )}
                 </div>
             </div>
 
-            <div className="max-w-4xl mx-auto px-6 py-10" ref={reportRef}>
+            <div className="max-w-5xl mx-auto px-6 py-12" ref={reportRef}>
                 {/* File Info */}
-                <div className="bg-white/5 rounded-xl p-6 mb-8 border border-white/10">
-                    <div className="flex items-center gap-4">
-                        <FileText className="w-10 h-10 text-purple-400" />
-                        <div>
-                            <h2 className="text-lg font-semibold text-white">{filename}</h2>
-                            <p className="text-sm text-gray-400">Analyzing file authenticity...</p>
-                        </div>
+                <div className="bg-slate-50 rounded-lg p-6 mb-10 border border-slate-200 flex items-center gap-5">
+                    <div className="p-4 bg-white rounded-md border border-slate-200 shadow-sm">
+                        <FileText className="w-8 h-8 text-slate-700" />
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-bold text-slate-900">{filename}</h2>
+                        <p className="text-sm text-slate-500 mt-1">
+                            {finalReport ? 'Analysis Complete' : 'Processing Asset...'}
+                        </p>
                     </div>
                 </div>
 
+                {/* Final Report */}
+                {finalReport && (
+                    <div className="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                        {/* AI Tool Banner */}
+                        {finalReport.ai_tool?.detected && (
+                            <div className="bg-slate-900 text-white rounded-t-xl p-6 flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    {finalReport.ai_tool.logo && (
+                                        <div className="w-12 h-12 bg-white rounded-lg p-1 flex items-center justify-center">
+                                            <img
+                                                src={finalReport.ai_tool.logo}
+                                                alt={finalReport.ai_tool.name}
+                                                className="w-full h-full object-contain"
+                                                onError={(e) => {
+                                                    (e.target as HTMLImageElement).style.display = 'none';
+                                                }}
+                                            />
+                                        </div>
+                                    )}
+                                    <div>
+                                        <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Detected Origin</p>
+                                        <h2 className="text-2xl font-bold">{finalReport.ai_tool.name}</h2>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <span className="px-3 py-1 bg-white/10 rounded-full text-xs font-medium border border-white/20">
+                                        {finalReport.ai_tool.confidence.toUpperCase()} CONFIDENCE
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className={`bg-white border border-slate-200 shadow-xl shadow-slate-200/50 ${finalReport.ai_tool?.detected ? 'rounded-b-xl border-t-0' : 'rounded-xl'}`}>
+                            <div className="p-8 border-b border-slate-100">
+                                <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+                                    <div className="text-center md:text-left">
+                                        <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Synthetic Probability</p>
+                                        <div className="flex items-baseline gap-2 justify-center md:justify-start">
+                                            <span className="text-6xl font-extrabold text-slate-900">{finalReport.synthetic_probability}%</span>
+                                            <span className={`text-sm font-bold px-3 py-1 rounded-full ${finalReport.confidence_level === 'High' ? 'bg-green-100 text-green-700' :
+                                                    finalReport.confidence_level === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
+                                                        'bg-red-100 text-red-700'
+                                                }`}>
+                                                {finalReport.confidence_level} Confidence
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-4">
+                                        <div className="text-center px-6 py-4 bg-slate-50 rounded-lg border border-slate-100">
+                                            <div className="text-2xl font-bold text-slate-900">{finalReport.breakdown.filename_score}</div>
+                                            <div className="text-xs font-medium text-slate-500 uppercase mt-1">Filename</div>
+                                        </div>
+                                        <div className="text-center px-6 py-4 bg-slate-50 rounded-lg border border-slate-100">
+                                            <div className="text-2xl font-bold text-slate-900">{finalReport.breakdown.metadata_score}</div>
+                                            <div className="text-xs font-medium text-slate-500 uppercase mt-1">Metadata</div>
+                                        </div>
+                                        <div className="text-center px-6 py-4 bg-slate-50 rounded-lg border border-slate-100">
+                                            <div className="text-2xl font-bold text-slate-900">{finalReport.breakdown.c2pa_score}</div>
+                                            <div className="text-xs font-medium text-slate-500 uppercase mt-1">C2PA</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Analysis Steps */}
-                <div className="space-y-4 mb-8">
+                <div className="space-y-4">
+                    <h3 className="text-lg font-bold text-slate-900 mb-6">Forensic Analysis Log</h3>
                     {steps.map((step, index) => (
                         <div
                             key={step.step}
-                            className={`bg-white/5 rounded-xl border transition-all duration-500 ${step.status === 'complete' ? 'border-green-500/50' :
-                                step.status === 'running' ? 'border-purple-500/50 animate-pulse' :
-                                    step.status === 'error' ? 'border-red-500/50' :
-                                        'border-white/10'
+                            className={`bg-white rounded-lg border transition-all duration-300 ${step.status === 'complete' ? 'border-slate-200' :
+                                    step.status === 'running' ? 'border-slate-400 shadow-md' :
+                                        'border-slate-100 opacity-60'
                                 }`}
                         >
-                            <div className="p-4 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${step.status === 'complete' ? 'bg-green-500/20 text-green-400' :
-                                        step.status === 'running' ? 'bg-purple-500/20 text-purple-400' :
-                                            step.status === 'error' ? 'bg-red-500/20 text-red-400' :
-                                                'bg-white/10 text-gray-500'
+                            <div className="p-5 flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${step.status === 'complete' ? 'bg-slate-50 border-slate-200 text-slate-700' :
+                                            step.status === 'running' ? 'bg-slate-900 border-slate-900 text-white' :
+                                                'bg-slate-50 border-slate-100 text-slate-300'
                                         }`}>
                                         {step.status === 'running' ? <Loader2 className="w-5 h-5 animate-spin" /> :
                                             step.status === 'complete' ? <CheckCircle className="w-5 h-5" /> :
-                                                step.status === 'error' ? <AlertCircle className="w-5 h-5" /> :
-                                                    getStepIcon(step.step)}
+                                                getStepIcon(step.step)}
                                     </div>
                                     <div>
-                                        <h3 className="font-medium text-white">{getStepTitle(step.step)}</h3>
-                                        <p className="text-xs text-gray-400">
-                                            {step.status === 'pending' ? 'Waiting...' :
+                                        <h3 className={`font-semibold ${step.status === 'running' ? 'text-slate-900' : 'text-slate-700'}`}>
+                                            {getStepTitle(step.step)}
+                                        </h3>
+                                        <p className="text-xs text-slate-500 mt-0.5">
+                                            {step.status === 'pending' ? 'Queued' :
                                                 step.status === 'running' ? 'Processing...' :
-                                                    step.status === 'complete' ? 'Complete' :
-                                                        'Error'}
+                                                    step.status === 'complete' ? 'Completed successfully' :
+                                                        'Error encountered'}
                                         </p>
                                     </div>
                                 </div>
-                                <span className={`text-xs font-medium px-3 py-1 rounded-full ${step.status === 'complete' ? 'bg-green-500/20 text-green-400' :
-                                    step.status === 'running' ? 'bg-purple-500/20 text-purple-400' :
-                                        step.status === 'error' ? 'bg-red-500/20 text-red-400' :
-                                            'bg-white/10 text-gray-500'
-                                    }`}>
-                                    Step {index + 1}/4
-                                </span>
                             </div>
 
                             {/* Step Details */}
                             {step.status === 'complete' && step.data && (
-                                <div className="px-4 pb-4">
+                                <div className="px-5 pb-5 pl-[4.5rem]">
                                     {/* Special display for metadata extraction */}
                                     {step.step === 'metadata_extraction' && step.data.key_attributes && (
-                                        <div className="mb-3 grid grid-cols-2 gap-2">
+                                        <div className="mb-4 grid grid-cols-2 gap-x-8 gap-y-4 border-t border-slate-100 pt-4">
                                             {Object.entries(step.data.key_attributes).map(([key, value]) => (
-                                                <div key={key} className="bg-black/30 rounded-lg p-3">
-                                                    <p className="text-xs text-gray-500">{key}</p>
-                                                    <p className="text-sm text-white font-medium truncate">
+                                                <div key={key}>
+                                                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">{key}</p>
+                                                    <p className="text-sm text-slate-900 font-medium break-all">
                                                         {typeof value === 'object' ? JSON.stringify(value) : String(value)}
                                                     </p>
                                                 </div>
                                             ))}
                                         </div>
                                     )}
+
                                     <details className="group">
-                                        <summary className="cursor-pointer text-sm text-gray-400 hover:text-white transition">
-                                            View raw data
+                                        <summary className="cursor-pointer text-xs font-medium text-slate-500 hover:text-slate-900 transition flex items-center gap-1">
+                                            <ChevronRight className="w-3 h-3 group-open:rotate-90 transition-transform" />
+                                            View Raw Data
                                         </summary>
-                                        <pre className="mt-3 bg-black/50 p-4 rounded-lg text-xs text-gray-400 overflow-x-auto max-h-48">
+                                        <pre className="mt-3 bg-slate-50 border border-slate-200 p-4 rounded-md text-xs text-slate-600 overflow-x-auto font-mono">
                                             {JSON.stringify(step.data.raw_data || step.data, null, 2)}
                                         </pre>
                                     </details>
@@ -299,109 +372,6 @@ export default function AnalyzePage() {
                         </div>
                     ))}
                 </div>
-
-                {/* Final Report */}
-                {finalReport && (
-                    <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
-                        {/* AI Tool Detection Banner */}
-                        {finalReport.ai_tool?.detected && (
-                            <div
-                                className="p-6 border-b border-white/10"
-                                style={{ backgroundColor: `${finalReport.ai_tool.color}15` }}
-                            >
-                                <div className="flex items-center gap-4">
-                                    {finalReport.ai_tool.logo && (
-                                        <img
-                                            src={finalReport.ai_tool.logo}
-                                            alt={finalReport.ai_tool.name}
-                                            className="w-16 h-16 rounded-xl object-contain bg-white/10 p-2"
-                                            onError={(e) => {
-                                                (e.target as HTMLImageElement).style.display = 'none';
-                                            }}
-                                        />
-                                    )}
-                                    <div>
-                                        <p className="text-sm text-gray-400">Likely Generated By</p>
-                                        <h2
-                                            className="text-2xl font-bold"
-                                            style={{ color: finalReport.ai_tool.color }}
-                                        >
-                                            {finalReport.ai_tool.name}
-                                        </h2>
-                                        <p className="text-xs text-gray-500 mt-1">
-                                            {finalReport.ai_tool.confidence} confidence • {finalReport.ai_tool.reason}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        <div className="p-6 bg-gradient-to-r from-purple-900/50 to-pink-900/50 border-b border-white/10">
-                            <div className="flex items-center justify-between">
-                                <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                                    <CheckCircle className="w-5 h-5 text-green-400" />
-                                    Analysis Complete
-                                </h3>
-                                <div className={`px-4 py-1.5 rounded-full text-sm font-bold ${finalReport.confidence_level === 'High' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
-                                    finalReport.confidence_level === 'Medium' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
-                                        'bg-red-500/20 text-red-400 border border-red-500/30'
-                                    }`}>
-                                    {finalReport.confidence_level} Confidence
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="p-6 space-y-6">
-                            {/* Score */}
-                            <div>
-                                <div className="flex items-center justify-between mb-2">
-                                    <span className="text-gray-400">Synthetic Probability</span>
-                                    <span className="text-4xl font-bold text-white">{finalReport.synthetic_probability}%</span>
-                                </div>
-                                <div className="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
-                                    <div
-                                        className={`h-4 rounded-full transition-all duration-1000 ${finalReport.synthetic_probability > 70 ? 'bg-gradient-to-r from-red-500 to-orange-500' :
-                                            finalReport.synthetic_probability > 40 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
-                                                'bg-gradient-to-r from-green-500 to-emerald-500'
-                                            }`}
-                                        style={{ width: `${finalReport.synthetic_probability}%` }}
-                                    ></div>
-                                </div>
-                                <p className="text-sm text-gray-500 mt-2">
-                                    {finalReport.synthetic_probability > 70 ? 'High likelihood of AI generation' :
-                                        finalReport.synthetic_probability > 40 ? 'Some indicators of synthetic origin' :
-                                            'Appears to be authentic human-created content'}
-                                </p>
-                            </div>
-
-                            {/* Breakdown */}
-                            <div className="grid grid-cols-3 gap-4">
-                                <div className="p-4 bg-white/5 rounded-xl text-center">
-                                    <div className="text-3xl font-bold text-purple-400">{finalReport.breakdown.filename_score}</div>
-                                    <div className="text-xs text-gray-400 mt-1">Filename Score</div>
-                                </div>
-                                <div className="p-4 bg-white/5 rounded-xl text-center">
-                                    <div className="text-3xl font-bold text-cyan-400">{finalReport.breakdown.metadata_score}</div>
-                                    <div className="text-xs text-gray-400 mt-1">Metadata Score</div>
-                                </div>
-                                <div className="p-4 bg-white/5 rounded-xl text-center">
-                                    <div className="text-3xl font-bold text-pink-400">{finalReport.breakdown.c2pa_score}</div>
-                                    <div className="text-xs text-gray-400 mt-1">C2PA Score</div>
-                                </div>
-                            </div>
-
-                            {/* Download Button */}
-                            <div className="flex justify-center pt-4">
-                                <button
-                                    onClick={downloadPDF}
-                                    className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-semibold transition-all transform hover:scale-105"
-                                >
-                                    <Download className="w-5 h-5" /> Download Report as PDF
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     );
