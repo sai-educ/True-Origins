@@ -234,17 +234,17 @@ export default function AnalyzePage() {
                         <div
                             key={step.step}
                             className={`bg-white/5 rounded-xl border transition-all duration-500 ${step.status === 'complete' ? 'border-green-500/50' :
-                                    step.status === 'running' ? 'border-purple-500/50 animate-pulse' :
-                                        step.status === 'error' ? 'border-red-500/50' :
-                                            'border-white/10'
+                                step.status === 'running' ? 'border-purple-500/50 animate-pulse' :
+                                    step.status === 'error' ? 'border-red-500/50' :
+                                        'border-white/10'
                                 }`}
                         >
                             <div className="p-4 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${step.status === 'complete' ? 'bg-green-500/20 text-green-400' :
-                                            step.status === 'running' ? 'bg-purple-500/20 text-purple-400' :
-                                                step.status === 'error' ? 'bg-red-500/20 text-red-400' :
-                                                    'bg-white/10 text-gray-500'
+                                        step.status === 'running' ? 'bg-purple-500/20 text-purple-400' :
+                                            step.status === 'error' ? 'bg-red-500/20 text-red-400' :
+                                                'bg-white/10 text-gray-500'
                                         }`}>
                                         {step.status === 'running' ? <Loader2 className="w-5 h-5 animate-spin" /> :
                                             step.status === 'complete' ? <CheckCircle className="w-5 h-5" /> :
@@ -262,9 +262,9 @@ export default function AnalyzePage() {
                                     </div>
                                 </div>
                                 <span className={`text-xs font-medium px-3 py-1 rounded-full ${step.status === 'complete' ? 'bg-green-500/20 text-green-400' :
-                                        step.status === 'running' ? 'bg-purple-500/20 text-purple-400' :
-                                            step.status === 'error' ? 'bg-red-500/20 text-red-400' :
-                                                'bg-white/10 text-gray-500'
+                                    step.status === 'running' ? 'bg-purple-500/20 text-purple-400' :
+                                        step.status === 'error' ? 'bg-red-500/20 text-red-400' :
+                                            'bg-white/10 text-gray-500'
                                     }`}>
                                     Step {index + 1}/4
                                 </span>
@@ -273,12 +273,25 @@ export default function AnalyzePage() {
                             {/* Step Details */}
                             {step.status === 'complete' && step.data && (
                                 <div className="px-4 pb-4">
+                                    {/* Special display for metadata extraction */}
+                                    {step.step === 'metadata_extraction' && step.data.key_attributes && (
+                                        <div className="mb-3 grid grid-cols-2 gap-2">
+                                            {Object.entries(step.data.key_attributes).map(([key, value]) => (
+                                                <div key={key} className="bg-black/30 rounded-lg p-3">
+                                                    <p className="text-xs text-gray-500">{key}</p>
+                                                    <p className="text-sm text-white font-medium truncate">
+                                                        {typeof value === 'object' ? JSON.stringify(value) : String(value)}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                     <details className="group">
                                         <summary className="cursor-pointer text-sm text-gray-400 hover:text-white transition">
-                                            View details
+                                            View raw data
                                         </summary>
                                         <pre className="mt-3 bg-black/50 p-4 rounded-lg text-xs text-gray-400 overflow-x-auto max-h-48">
-                                            {JSON.stringify(step.data, null, 2)}
+                                            {JSON.stringify(step.data.raw_data || step.data, null, 2)}
                                         </pre>
                                     </details>
                                 </div>
@@ -290,6 +303,39 @@ export default function AnalyzePage() {
                 {/* Final Report */}
                 {finalReport && (
                     <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+                        {/* AI Tool Detection Banner */}
+                        {finalReport.ai_tool?.detected && (
+                            <div
+                                className="p-6 border-b border-white/10"
+                                style={{ backgroundColor: `${finalReport.ai_tool.color}15` }}
+                            >
+                                <div className="flex items-center gap-4">
+                                    {finalReport.ai_tool.logo && (
+                                        <img
+                                            src={finalReport.ai_tool.logo}
+                                            alt={finalReport.ai_tool.name}
+                                            className="w-16 h-16 rounded-xl object-contain bg-white/10 p-2"
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).style.display = 'none';
+                                            }}
+                                        />
+                                    )}
+                                    <div>
+                                        <p className="text-sm text-gray-400">Likely Generated By</p>
+                                        <h2
+                                            className="text-2xl font-bold"
+                                            style={{ color: finalReport.ai_tool.color }}
+                                        >
+                                            {finalReport.ai_tool.name}
+                                        </h2>
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            {finalReport.ai_tool.confidence} confidence • {finalReport.ai_tool.reason}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         <div className="p-6 bg-gradient-to-r from-purple-900/50 to-pink-900/50 border-b border-white/10">
                             <div className="flex items-center justify-between">
                                 <h3 className="text-xl font-bold text-white flex items-center gap-2">
@@ -297,8 +343,8 @@ export default function AnalyzePage() {
                                     Analysis Complete
                                 </h3>
                                 <div className={`px-4 py-1.5 rounded-full text-sm font-bold ${finalReport.confidence_level === 'High' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
-                                        finalReport.confidence_level === 'Medium' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
-                                            'bg-red-500/20 text-red-400 border border-red-500/30'
+                                    finalReport.confidence_level === 'Medium' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
+                                        'bg-red-500/20 text-red-400 border border-red-500/30'
                                     }`}>
                                     {finalReport.confidence_level} Confidence
                                 </div>
@@ -315,8 +361,8 @@ export default function AnalyzePage() {
                                 <div className="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
                                     <div
                                         className={`h-4 rounded-full transition-all duration-1000 ${finalReport.synthetic_probability > 70 ? 'bg-gradient-to-r from-red-500 to-orange-500' :
-                                                finalReport.synthetic_probability > 40 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
-                                                    'bg-gradient-to-r from-green-500 to-emerald-500'
+                                            finalReport.synthetic_probability > 40 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
+                                                'bg-gradient-to-r from-green-500 to-emerald-500'
                                             }`}
                                         style={{ width: `${finalReport.synthetic_probability}%` }}
                                     ></div>

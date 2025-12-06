@@ -1,42 +1,15 @@
-Traceback (most recent call last):
-  File "/Users/sai/Documents/GitHub/True-Origins/venv/bin/uvicorn", line 7, in <module>
-    sys.exit(main())
-  File "/Users/sai/Documents/GitHub/True-Origins/venv/lib/python3.10/site-packages/click/core.py", line 1485, in __call__
-    return self.main(*args, **kwargs)
-  File "/Users/sai/Documents/GitHub/True-Origins/venv/lib/python3.10/site-packages/click/core.py", line 1406, in main
-    rv = self.invoke(ctx)
-  File "/Users/sai/Documents/GitHub/True-Origins/venv/lib/python3.10/site-packages/click/core.py", line 1269, in invoke
-    return ctx.invoke(self.callback, **ctx.params)
-  File "/Users/sai/Documents/GitHub/True-Origins/venv/lib/python3.10/site-packages/click/core.py", line 824, in invoke
-    return callback(*args, **kwargs)
-  File "/Users/sai/Documents/GitHub/True-Origins/venv/lib/python3.10/site-packages/uvicorn/main.py", line 423, in main
-    run(
-  File "/Users/sai/Documents/GitHub/True-Origins/venv/lib/python3.10/site-packages/uvicorn/main.py", line 593, in run
-    server.run()
-  File "/Users/sai/Documents/GitHub/True-Origins/venv/lib/python3.10/site-packages/uvicorn/server.py", line 67, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/Users/sai/Documents/GitHub/True-Origins/venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
-    return loop.run_until_complete(main)
-  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/asyncio/base_events.py", line 641, in run_until_complete
-    return future.result()
-  File "/Users/sai/Documents/GitHub/True-Origins/venv/lib/python3.10/site-packages/uvicorn/server.py", line 71, in serve
-    await self._serve(sockets)
-  File "/Users/sai/Documents/GitHub/True-Origins/venv/lib/python3.10/site-packages/uvicorn/server.py", line 78, in _serve
-    config.load()
-  File "/Users/sai/Documents/GitHub/True-Origins/venv/lib/python3.10/site-packages/uvicorn/config.py", line 439, in load
-    self.loaded_app = import_from_string(self.app)
-  File "/Users/sai/Documents/GitHub/True-Origins/venv/lib/python3.10/site-packages/uvicorn/importer.py", line 22, in import_from_string
-    raise exc from None
-  File "/Users/sai/Documents/GitHub/True-Origins/venv/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/importlib/__init__.py", line 126, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-  File "/Users/sai/Documents/GitHub/True-Origins/backend/main.py", line 3, in <module>
-    from api import upload, analyze
-ModuleNotFoundError: No module named 'api'
+INFO:     Started server process [48662]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:51480 - "POST /api/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51480 - "POST /api/analyze/filename HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51480 - "POST /api/analyze/metadata HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51480 - "POST /api/analyze/c2pa HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51480 - "POST /api/analyze/score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51731 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51732 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51731 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51732 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51731 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51732 - "GET /favicon.ico HTTP/1.1" 404 Not Found

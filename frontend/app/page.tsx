@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import axios from 'axios';
-import { Upload, FileText, AlertCircle, CheckCircle, Loader2, Shield, Search, FileCheck } from 'lucide-react';
+import { Upload, FileText, AlertCircle, Loader2, Shield, Search, FileCheck } from 'lucide-react';
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
@@ -146,11 +146,11 @@ export default function Home() {
                 </div>
                 <button
                   onClick={handleUploadAndAnalyze}
-                  disabled={uploading || analyzing}
+                  disabled={uploading}
                   className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
-                  {(uploading || analyzing) && <Loader2 className="w-4 h-4 animate-spin" />}
-                  {uploading ? 'Uploading...' : analyzing ? 'Analyzing...' : 'Analyze'}
+                  {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {uploading ? 'Uploading...' : 'Analyze'}
                 </button>
               </div>
             )}
@@ -160,74 +160,6 @@ export default function Home() {
               <div className="mt-6 p-4 bg-red-500/20 border border-red-500/50 rounded-xl flex items-center gap-3 text-red-200">
                 <AlertCircle className="w-5 h-5 flex-shrink-0" />
                 {error}
-              </div>
-            )}
-
-            {/* Report Card */}
-            {report && (
-              <div className="mt-8 bg-black/40 rounded-xl overflow-hidden border border-gray-700">
-                <div className="p-6 border-b border-gray-700 flex justify-between items-center bg-gradient-to-r from-purple-900/50 to-pink-900/50">
-                  <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-400" />
-                    Analysis Complete
-                  </h3>
-                  <div className={`px-4 py-1.5 rounded-full text-sm font-bold ${report.confidence_level === 'High' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
-                    report.confidence_level === 'Medium' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
-                      'bg-red-500/20 text-red-400 border border-red-500/30'
-                    }`}>
-                    {report.confidence_level} Confidence
-                  </div>
-                </div>
-
-                <div className="p-6 space-y-6">
-                  {/* Score */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-gray-400">Synthetic Probability</span>
-                      <span className="text-3xl font-bold text-white">{report.synthetic_probability}%</span>
-                    </div>
-                    <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
-                      <div
-                        className={`h-3 rounded-full transition-all duration-1000 ${report.synthetic_probability > 70 ? 'bg-gradient-to-r from-red-500 to-orange-500' :
-                          report.synthetic_probability > 40 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
-                            'bg-gradient-to-r from-green-500 to-emerald-500'
-                          }`}
-                        style={{ width: `${report.synthetic_probability}%` }}
-                      ></div>
-                    </div>
-                    <p className="text-sm text-gray-500 mt-2">
-                      {report.synthetic_probability > 70 ? 'High likelihood of AI generation' :
-                        report.synthetic_probability > 40 ? 'Some indicators of synthetic origin' :
-                          'Appears to be authentic human-created content'}
-                    </p>
-                  </div>
-
-                  {/* Breakdown */}
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="p-4 bg-white/5 rounded-xl text-center">
-                      <div className="text-2xl font-bold text-purple-400">{report.breakdown.filename_score}</div>
-                      <div className="text-xs text-gray-400 mt-1">Filename Score</div>
-                    </div>
-                    <div className="p-4 bg-white/5 rounded-xl text-center">
-                      <div className="text-2xl font-bold text-cyan-400">{report.breakdown.metadata_score}</div>
-                      <div className="text-xs text-gray-400 mt-1">Metadata Score</div>
-                    </div>
-                    <div className="p-4 bg-white/5 rounded-xl text-center">
-                      <div className="text-2xl font-bold text-pink-400">{report.breakdown.c2pa_score}</div>
-                      <div className="text-xs text-gray-400 mt-1">C2PA Score</div>
-                    </div>
-                  </div>
-
-                  {/* Raw Details (Collapsible) */}
-                  <details className="group">
-                    <summary className="cursor-pointer text-sm text-gray-400 hover:text-white transition">
-                      View raw analysis data
-                    </summary>
-                    <pre className="mt-4 bg-black/50 p-4 rounded-lg text-xs text-gray-400 overflow-x-auto max-h-60">
-                      {JSON.stringify(report.details, null, 2)}
-                    </pre>
-                  </details>
-                </div>
               </div>
             )}
           </div>
