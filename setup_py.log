@@ -1,0 +1,3 @@
+Starting setup_py...
+Venv created
+Error: Command '['/Users/sai/Documents/GitHub/True-Origins/venv/bin/pip', 'install', '-r', 'backend/requirements.txt']' returned non-zero exit status 1.
