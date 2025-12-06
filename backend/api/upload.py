@@ -22,6 +22,7 @@ async def upload_file(file: UploadFile = File(...)):
             "filename": file.filename,
             "filepath": str(file_path),
             "content_type": file.content_type,
+            "size": os.path.getsize(file_path),
             "message": "File uploaded successfully"
         }
     except Exception as e:

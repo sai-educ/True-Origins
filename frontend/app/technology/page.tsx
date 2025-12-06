@@ -1,5 +1,5 @@
 import Navbar from '../../components/Navbar';
-import { Shield, CheckCircle, Loader2, FileCode, Lock, Server } from 'lucide-react';
+import { Shield, Database, Cpu, Network, FileSearch, Lock } from 'lucide-react';
 
 export default function TechnologyPage() {
     return (
@@ -7,118 +7,129 @@ export default function TechnologyPage() {
             <Navbar />
 
             <main className="pt-20 pb-24">
-                {/* Hero */}
-                <section className="px-6 mb-24">
+                {/* Header */}
+                <section className="px-6 mb-20">
                     <div className="max-w-4xl mx-auto text-center">
-                        <h1 className="text-5xl font-extrabold text-slate-900 mb-8 tracking-tight leading-tight">
-                            Forensic Precision. <br /> Cryptographic Certainty.
+                        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight">
+                            Algorithmic Verification Framework
                         </h1>
-                        <p className="text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
-                            Our multi-layered verification engine combines the C2PA open standard with
-                            advanced metadata forensics and AI-driven heuristics to deliver
-                            definitive authenticity assessments.
+                        <p className="text-xl text-slate-600 leading-relaxed max-w-3xl mx-auto font-light">
+                            A systematic approach to assessing emerging generative technologies through
+                            cryptographic provenance, metadata forensics, and heuristic analysis.
                         </p>
                     </div>
                 </section>
 
-                {/* Architecture Diagram / Explanation */}
-                <section className="px-6 bg-slate-900 text-white py-24">
+                {/* Methodology Section */}
+                <section className="px-6 mb-24">
+                    <div className="max-w-5xl mx-auto">
+                        <div className="grid md:grid-cols-2 gap-16 items-center">
+                            <div>
+                                <h2 className="text-2xl font-bold text-slate-900 mb-6">Methodology</h2>
+                                <p className="text-slate-600 leading-relaxed mb-6 text-justify">
+                                    Our verification pipeline employs a multi-modal assessment strategy designed to interrogate
+                                    digital assets at the structural, metadata, and pixel levels. By integrating the
+                                    Coalition for Content Provenance and Authenticity (C2PA) standards with proprietary
+                                    forensic algorithms, we establish a deterministic probability of synthetic origin.
+                                </p>
+                                <p className="text-slate-600 leading-relaxed text-justify">
+                                    This framework is designed to be adaptive, evolving alongside the rapid advancements
+                                    in generative adversarial networks (GANs) and diffusion models, ensuring robust
+                                    detection capabilities against state-of-the-art synthesis techniques.
+                                </p>
+                            </div>
+                            <div className="bg-slate-50 p-8 rounded-xl border border-slate-200">
+                                <h3 className="font-bold text-slate-900 mb-4 border-b border-slate-200 pb-2">Assessment Vectors</h3>
+                                <ul className="space-y-4">
+                                    <li className="flex gap-4">
+                                        <Database className="w-6 h-6 text-slate-700 flex-shrink-0" />
+                                        <div>
+                                            <h4 className="font-semibold text-slate-900">Provenance Layer</h4>
+                                            <p className="text-sm text-slate-600">Cryptographic validation of chain-of-custody assertions via C2PA/CAI specifications.</p>
+                                        </div>
+                                    </li>
+                                    <li className="flex gap-4">
+                                        <FileSearch className="w-6 h-6 text-slate-700 flex-shrink-0" />
+                                        <div>
+                                            <h4 className="font-semibold text-slate-900">Metadata Forensics</h4>
+                                            <p className="text-sm text-slate-600">Analysis of EXIF/XMP inconsistencies, software signatures, and quantization tables.</p>
+                                        </div>
+                                    </li>
+                                    <li className="flex gap-4">
+                                        <Cpu className="w-6 h-6 text-slate-700 flex-shrink-0" />
+                                        <div>
+                                            <h4 className="font-semibold text-slate-900">Heuristic Detection</h4>
+                                            <p className="text-sm text-slate-600">Pattern recognition of generative artifacts and naming conventions specific to AI models.</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* System Architecture */}
+                <section className="px-6 py-24 bg-slate-50 border-y border-slate-200">
                     <div className="max-w-6xl mx-auto">
-                        <h2 className="text-3xl font-bold mb-16 text-center">The Verification Pipeline</h2>
+                        <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center">System Architecture</h2>
 
-                        <div className="grid md:grid-cols-4 gap-8 relative">
-                            {/* Connecting Line (Desktop) */}
-                            <div className="hidden md:block absolute top-12 left-0 right-0 h-0.5 bg-slate-700 -z-10 transform -translate-y-1/2"></div>
-
-                            {/* Step 1 */}
-                            <div className="relative">
-                                <div className="w-24 h-24 bg-slate-800 rounded-2xl border border-slate-700 flex items-center justify-center mb-8 mx-auto z-10">
-                                    <FileCode className="w-10 h-10 text-purple-400" />
+                        <div className="grid md:grid-cols-3 gap-8">
+                            <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm">
+                                <div className="mb-6 text-slate-900">
+                                    <Network className="w-10 h-10" />
                                 </div>
-                                <h3 className="text-xl font-bold mb-3 text-center">1. Ingestion</h3>
-                                <p className="text-slate-400 text-sm text-center leading-relaxed">
-                                    Secure upload and hashing of the digital asset. We support images, videos, and PDFs.
-                                    Files are processed in a secure, ephemeral environment.
+                                <h3 className="text-xl font-bold text-slate-900 mb-3">1. Ingestion & Normalization</h3>
+                                <p className="text-slate-600 text-sm leading-relaxed">
+                                    Incoming assets undergo strict sanitization and format normalization.
+                                    Cryptographic hashes (SHA-256) are generated to establish a unique identifier
+                                    for the analysis session, ensuring data integrity throughout the pipeline.
                                 </p>
                             </div>
 
-                            {/* Step 2 */}
-                            <div className="relative">
-                                <div className="w-24 h-24 bg-slate-800 rounded-2xl border border-slate-700 flex items-center justify-center mb-8 mx-auto z-10">
-                                    <Shield className="w-10 h-10 text-cyan-400" />
+                            <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm">
+                                <div className="mb-6 text-slate-900">
+                                    <Lock className="w-10 h-10" />
                                 </div>
-                                <h3 className="text-xl font-bold mb-3 text-center">2. C2PA Validation</h3>
-                                <p className="text-slate-400 text-sm text-center leading-relaxed">
-                                    We verify cryptographic signatures against the C2PA trust list. This confirms if the
-                                    file's provenance data has been tampered with since creation.
+                                <h3 className="text-xl font-bold text-slate-900 mb-3">2. Cryptographic Verification</h3>
+                                <p className="text-slate-600 text-sm leading-relaxed">
+                                    The system queries the asset's manifest store for C2PA assertions.
+                                    Digital signatures are validated against a trusted root certificate authority (CA) list
+                                    to confirm the identity of the signing entity (e.g., camera hardware, editing software).
                                 </p>
                             </div>
 
-                            {/* Step 3 */}
-                            <div className="relative">
-                                <div className="w-24 h-24 bg-slate-800 rounded-2xl border border-slate-700 flex items-center justify-center mb-8 mx-auto z-10">
-                                    <Server className="w-10 h-10 text-pink-400" />
+                            <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm">
+                                <div className="mb-6 text-slate-900">
+                                    <Cpu className="w-10 h-10" />
                                 </div>
-                                <h3 className="text-xl font-bold mb-3 text-center">3. Deep Forensics</h3>
-                                <p className="text-slate-400 text-sm text-center leading-relaxed">
-                                    Extraction of EXIF, XMP, and structural metadata. We analyze software signatures,
-                                    compression artifacts, and quantization tables for anomalies.
-                                </p>
-                            </div>
-
-                            {/* Step 4 */}
-                            <div className="relative">
-                                <div className="w-24 h-24 bg-slate-800 rounded-2xl border border-slate-700 flex items-center justify-center mb-8 mx-auto z-10">
-                                    <CheckCircle className="w-10 h-10 text-green-400" />
-                                </div>
-                                <h3 className="text-xl font-bold mb-3 text-center">4. Scoring & Report</h3>
-                                <p className="text-slate-400 text-sm text-center leading-relaxed">
-                                    A weighted scoring engine synthesizes all signals into a final probability score
-                                    and generates a detailed, immutable verification report.
+                                <h3 className="text-xl font-bold text-slate-900 mb-3">3. Inference & Scoring</h3>
+                                <p className="text-slate-600 text-sm leading-relaxed">
+                                    Extracted features are fed into a weighted scoring engine.
+                                    The engine aggregates signals from metadata analysis, provenance checks, and
+                                    heuristic matching to compute a final synthetic probability score with a defined confidence interval.
                                 </p>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* Detailed Tech Specs */}
+                {/* Emerging Tech Assessment */}
                 <section className="px-6 py-24">
                     <div className="max-w-4xl mx-auto">
-                        <div className="space-y-16">
-                            <div className="flex gap-8">
-                                <div className="flex-shrink-0 mt-1">
-                                    <Shield className="w-8 h-8 text-slate-900" />
-                                </div>
-                                <div>
-                                    <h3 className="text-2xl font-bold text-slate-900 mb-4">C2PA Standard Implementation</h3>
-                                    <p className="text-slate-600 leading-relaxed mb-4">
-                                        The Coalition for Content Provenance and Authenticity (C2PA) standard is the gold standard for
-                                        digital provenance. TrueOrigins implements the full C2PA specification, allowing us to:
-                                    </p>
-                                    <ul className="list-disc list-inside text-slate-600 space-y-2">
-                                        <li>Verify digital signatures from hardware (cameras) and software (editing tools).</li>
-                                        <li>Detect if provenance data has been stripped or altered.</li>
-                                        <li>Display the full "chain of custody" for an asset.</li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div className="flex gap-8">
-                                <div className="flex-shrink-0 mt-1">
-                                    <Loader2 className="w-8 h-8 text-slate-900" />
-                                </div>
-                                <div>
-                                    <h3 className="text-2xl font-bold text-slate-900 mb-4">Heuristic Pattern Matching</h3>
-                                    <p className="text-slate-600 leading-relaxed mb-4">
-                                        AI generators often leave subtle fingerprints. Our heuristic engine scans for:
-                                    </p>
-                                    <ul className="list-disc list-inside text-slate-600 space-y-2">
-                                        <li>Specific naming conventions used by tools like Midjourney, DALL-E, and Stable Diffusion.</li>
-                                        <li>Metadata tags injected by generative models.</li>
-                                        <li>Inconsistencies between file headers and content.</li>
-                                    </ul>
-                                </div>
-                            </div>
+                        <h2 className="text-3xl font-bold text-slate-900 mb-8">Assessing Emerging Technologies</h2>
+                        <div className="prose prose-lg text-slate-600 text-justify">
+                            <p>
+                                The landscape of generative AI is characterized by rapid iteration.
+                                Traditional detection methods based solely on visual artifacts are becoming increasingly
+                                unreliable as models improve. TrueOrigins adopts a <strong>provenance-first approach</strong>.
+                            </p>
+                            <p>
+                                Rather than playing a cat-and-mouse game with pixel-level detection, we focus on the
+                                immutable history of the file. By advocating for and implementing the C2PA standard,
+                                we provide a systematic method to verify authenticity that scales with technology.
+                                As new generative models emerge, our framework assesses them not just by what they produce,
+                                but by the digital footprints they leave—or fail to leave—in the file's metadata structure.
+                            </p>
                         </div>
                     </div>
                 </section>

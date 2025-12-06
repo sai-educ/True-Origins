@@ -48,12 +48,12 @@ AI_TOOLS = {
         "logo": "https://avatars.githubusercontent.com/u/111434792",
         "color": "#6366F1"
     },
-    "flux": {
-        "name": "FLUX",
-        "patterns": [r"flux", r"black.?forest"],
-        "software_signatures": ["flux", "black forest labs"],
-        "logo": "https://avatars.githubusercontent.com/u/139376803",
-        "color": "#1E40AF"
+    "gemini": {
+        "name": "Google Gemini",
+        "patterns": [r"gemini", r"google.?ai"],
+        "software_signatures": ["gemini", "google ai"],
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
+        "color": "#4285F4"
     }
 }
 
@@ -64,7 +64,7 @@ def detect_ai_tool(filename: str, metadata: dict, c2pa_data: dict) -> dict:
     Detects which AI tool likely generated the media.
     
     Returns:
-        dict with keys: detected, tool_id, name, logo, color, confidence, reason
+        dict with keys: detected, tool_id, name, logo, color, confidence, reason, disclaimer
     """
     filename_lower = filename.lower()
     
@@ -78,8 +78,9 @@ def detect_ai_tool(filename: str, metadata: dict, c2pa_data: dict) -> dict:
                     "name": tool_info["name"],
                     "logo": tool_info["logo"],
                     "color": tool_info["color"],
-                    "confidence": "high",
-                    "reason": f"Filename matches {tool_info['name']} pattern"
+                    "confidence": "medium", # Downgraded to medium for filename match
+                    "reason": f"Filename matches {tool_info['name']} pattern",
+                    "disclaimer": "Note: There is a 50% chance that this file is tampered or renamed. Please check the C2PA verification analysis below for a more accurate result."
                 }
     
     # Check metadata software signatures
@@ -98,7 +99,8 @@ def detect_ai_tool(filename: str, metadata: dict, c2pa_data: dict) -> dict:
                         "logo": tool_info["logo"],
                         "color": tool_info["color"],
                         "confidence": "high",
-                        "reason": f"Metadata software field contains {tool_info['name']} signature"
+                        "reason": f"Metadata software field contains {tool_info['name']} signature",
+                        "disclaimer": None
                     }
     
     # Check C2PA data for AI tool assertions
@@ -118,7 +120,8 @@ def detect_ai_tool(filename: str, metadata: dict, c2pa_data: dict) -> dict:
                             "logo": tool_info["logo"],
                             "color": tool_info["color"],
                             "confidence": "high",
-                            "reason": f"C2PA manifest indicates {tool_info['name']}"
+                            "reason": f"C2PA manifest indicates {tool_info['name']}",
+                            "disclaimer": None
                         }
             
             # Generic AI detection
@@ -129,7 +132,8 @@ def detect_ai_tool(filename: str, metadata: dict, c2pa_data: dict) -> dict:
                 "logo": None,
                 "color": "#EF4444",
                 "confidence": "medium",
-                "reason": "C2PA manifest indicates AI generation but specific tool unknown"
+                "reason": "C2PA manifest indicates AI generation but specific tool unknown",
+                "disclaimer": None
             }
     
     # No AI tool detected
@@ -140,5 +144,6 @@ def detect_ai_tool(filename: str, metadata: dict, c2pa_data: dict) -> dict:
         "logo": None,
         "color": None,
         "confidence": None,
-        "reason": "No AI generation indicators found"
+        "reason": "No AI generation indicators found",
+        "disclaimer": None
     }

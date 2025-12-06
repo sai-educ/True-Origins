@@ -117,6 +117,86 @@ async def extract_metadata(filepath: Path) -> dict:
                 key_attrs["AI-Related Fields"] = ai_fields
             
             metadata["key_attributes"] = key_attrs
+            
+            # Categorize metadata
+            categorized = {
+                "Image Metadata": {
+                    "Name": raw_data.get("FileName"),
+                    "File Size": raw_data.get("FileSize"),
+                    "File Type": raw_data.get("FileType"),
+                    "MIME Type": raw_data.get("MIMEType"),
+                    "Image Size": raw_data.get("ImageSize"),
+                    "Color Space": raw_data.get("ColorSpace"),
+                    "Created": raw_data.get("CreateDate") or raw_data.get("DateTimeOriginal"),
+                },
+                "Camera Settings": {
+                    "Make": raw_data.get("Make"),
+                    "Model": raw_data.get("Model"),
+                    "Lens": raw_data.get("LensID") or raw_data.get("LensModel"),
+                    "Focal Length": raw_data.get("FocalLength"),
+                    "Aperture": raw_data.get("FNumber"),
+                    "Exposure": raw_data.get("ExposureTime"),
+                    "ISO": raw_data.get("ISO"),
+                    "Flash": raw_data.get("Flash"),
+                },
+                "Location": {
+                    "Altitude": raw_data.get("GPSAltitude"),
+                    "Latitude": raw_data.get("GPSLatitude"),
+                    "Longitude": raw_data.get("GPSLongitude"),
+                }
+            }
+            
+            # Filter out None values
+            for category in categorized:
+                categorized[category] = {k: v for k, v in categorized[category].items() if v is not None}
+            
+            # Remove empty categories
+            categorized = {k: v for k, v in categorized.items() if v}
+
+            # Calculate metadata statistics
+            metadata_json_str = json.dumps(raw_data)
+            metadata_size_bytes = len(metadata_json_str.encode('utf-8'))
+            
+            # Get file size in bytes
+            file_size_bytes = 0
+            try:
+                import os
+                file_size_bytes = os.path.getsize(filepath)
+            except:
+                pass
+
+            # Format File Size string: "1.41 MB (1474611 bytes)"
+            file_size_display = raw_data.get("FileSize", "")
+            if file_size_bytes > 0:
+                # If ExifTool gave us a formatted string, append bytes. 
+                # If it gave bytes, format it.
+                # ExifTool -j usually gives formatted string if -n is NOT used.
+                if str(file_size_bytes) not in str(file_size_display):
+                     file_size_display = f"{file_size_display} ({file_size_bytes} bytes)"
+            
+            # Format Image Size string: "4000 x 6000 (24.0 megapixels)"
+            image_size_display = raw_data.get("ImageSize", "")
+            megapixels = raw_data.get("Megapixels", "")
+            if image_size_display and megapixels:
+                 image_size_display = f"{image_size_display} ({megapixels} megapixels)"
+
+            metadata_pct = 0
+            if file_size_bytes > 0:
+                metadata_pct = (metadata_size_bytes / file_size_bytes) * 100
+
+            metadata["statistics"] = {
+                "metadata_size_bytes": metadata_size_bytes,
+                "file_size_bytes": file_size_bytes,
+                "percentage": round(metadata_pct, 2)
+            }
+
+            metadata["categorized"] = categorized
+            # Update categorized with formatted values
+            if "Image Metadata" in metadata["categorized"]:
+                metadata["categorized"]["Image Metadata"]["File Size"] = file_size_display
+                metadata["categorized"]["Image Metadata"]["Image Size"] = image_size_display
+
+            metadata["full_metadata"] = raw_data # Store full flat metadata for the list view
             metadata["data"] = raw_data
             
         else:

@@ -29,3 +29,11 @@ app.include_router(analyze.router, prefix="/api", tags=["analyze"])
 @app.get("/")
 async def root():
     return {"message": "TrueOrigins API is running"}
+
+# Mount static files for uploads
+from fastapi.staticfiles import StaticFiles
+import os
+
+# Ensure directory exists
+os.makedirs("temp_uploads", exist_ok=True)
+app.mount("/uploads", StaticFiles(directory="temp_uploads"), name="uploads")

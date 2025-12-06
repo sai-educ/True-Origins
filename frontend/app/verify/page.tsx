@@ -31,10 +31,10 @@ export default function VerifyPage() {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
 
-            const { filepath } = uploadRes.data;
+            const { filepath, size } = uploadRes.data;
 
             // Navigate to analyze page with file info
-            window.location.href = `/analyze?filepath=${encodeURIComponent(filepath)}&filename=${encodeURIComponent(file.name)}`;
+            window.location.href = `/analyze?filepath=${encodeURIComponent(filepath)}&filename=${encodeURIComponent(file.name)}&size=${size}`;
 
         } catch (err: any) {
             console.error(err);
